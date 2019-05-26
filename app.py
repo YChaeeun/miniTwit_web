@@ -63,3 +63,18 @@ def follow() :
 
     user.setdefault('follow', set()).add(user_to_follow_id)
     return jsonify(user)
+
+@app.route('/unfollow', methods=['POST'])
+def unfollow() :
+    playload              = request.json
+    user_id               = int(playload['id'])
+    user_to_unfollow_id   = int(playload['unfollow'])
+
+
+    if user_id not in app.users or user_to_unfollow_id not in app.users :
+        return '사용자가 존재하지 않습니다', 400
+
+    user = app.users[user_id]
+
+    user.setdefault('follow', set()).discard(user_to_unfollow_id)
+    return jsonify(user)
